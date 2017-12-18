@@ -82,7 +82,7 @@ public class SignatureFilter implements ContainerRequestFilter {
                     if (signature.equals(header.signature)) {
                         return Option.none();
                     } else {
-                        String message = String.format("Diff between expected signature '%s' and received signature '%s'", signature.base64Url(), header.signature.base64());
+                        String message = String.format("Diff between expected signature '%s' and received signature '%s'", signature.base64Url(), header.signature.base64Url());
                         return Option.some(forbidden(message));
                     }
                 } else {
