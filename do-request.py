@@ -22,6 +22,6 @@ tosign=bytes(signdata).encode("utf-8")
 signature=base64.urlsafe_b64encode(hmac.new(secret, tosign, digestmod=hashlib.sha256).digest())
 
 req = urllib2.Request(url='http://localhost:9999/resource', headers=
-{"Date": dt, "Signature": """keyId="key1",algorithm="hmac-sha256",headers="(request-target) host date",signature="%s""" % signature} )
+{"Date": dt, "Signature": '''keyId="key1",algorithm="hmac-sha256",headers="(request-target) host date",signature="%s"''' % signature} )
 f = urllib2.urlopen(req)
 print f.read()

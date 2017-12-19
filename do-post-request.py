@@ -24,7 +24,7 @@ signdata="(request-target): post /resource\nhost: localhost:9999\ndate: %s\ndige
 tosign=bytes(signdata).encode("utf-8")
 
 signature=base64.urlsafe_b64encode(hmac.new(secret, tosign, digestmod=hashlib.sha256).digest())
-signatureHeader="""keyId="key1",algorithm="hmac-sha256",headers="(request-target) host date digest",signature="%s""" % signature
+signatureHeader='''keyId="key1",algorithm="hmac-sha256",headers="(request-target) host date digest",signature="%s"''' % signature
 req = urllib2.Request(url='http://localhost:9999/resource', headers=
 {"Date": dt, "Signature": signatureHeader, "digest": digest}, data = data )
 f = urllib2.urlopen(req)
