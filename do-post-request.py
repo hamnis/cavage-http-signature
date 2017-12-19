@@ -6,10 +6,15 @@ import locale, datetime
 import base64
 import hashlib
 import hmac
+import platform
 
 secret=bytes("0bc9e15d-eb84-4409-a05d-fdb3b5c4cc87").encode("utf-8")
 
-locale.setlocale(locale.LC_TIME, 'en_US.utf8')
+if platform.system() == "Linux":
+    locale.setlocale(locale.LC_TIME, 'en_US.utf8')
+else:
+    locale.setlocale(locale.LC_TIME, 'en_US')
+
 dt = datetime.datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
 data = "name=All"
 sha = hashlib.sha256()
