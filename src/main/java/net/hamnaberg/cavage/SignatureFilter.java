@@ -105,14 +105,18 @@ public class SignatureFilter implements ContainerRequestFilter {
     private Option<String> getHeader(String name, ContainerRequestContext request) {
         if ("(request-target)".equals(name)) {
             return Option.some(getRequestTarget(request));
-        } else if ("digest".equals(name) && writableMethods.contains(request.getMethod().toUpperCase()) && request.hasEntity()) {
-            Buffer buffer = new Buffer();
-            try (InputStream is = request.getEntityStream()) {
-                ByteString bs = buffer.readFrom(is).readByteString();
-                request.setEntityStream(new ByteArrayInputStream(bs.toByteArray()));
-                return Option.some("digest: SHA-256=" + bs.sha256().base64Url());
-            } catch (IOException e) {
-                throw new WebApplicationException(e.getMessage());
+        } else if ("digest".equals(name) && writableMethods.contains(request.getMethod().toUpperCase())) {
+            if (request.hasEntity()) {
+                Buffer buffer = new Buffer();
+                try (InputStream is = request.getEntityStream()) {
+                    ByteString bs = buffer.readFrom(is).readByteString();
+                    request.setEntityStream(new ByteArrayInputStream(bs.toByteArray()));
+                    return Option.some("digest: SHA-256=" + bs.sha256().base64Url());
+                } catch (IOException e) {
+                    throw new WebApplicationException(e.getMessage());
+                }
+            } else {
+                throw new WebApplicationException("Expected entity got none", 400);
             }
         }
         else {
